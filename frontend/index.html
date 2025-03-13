@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f9fafb;
+            background-color: #f9fafb;
             padding: 2rem;
         }
 
@@ -17,26 +17,37 @@
             padding: 1rem;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             height: 400px;
-            overflow-y: scroll;
+            overflow-y: auto;
             margin-bottom: 1rem;
         }
 
-        input {
-            width: 80%;
-            padding: 0.7rem;
-        }
-
+        input,
         button {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem;
+            margin: 5px;
         }
     </style>
 </head>
 
 <body>
-    <h2>Opobot (Chat IA)</h2>
+    <h2>Opobot Chat IA</h2>
+
     <div id="chat"></div>
     <input id="pregunta" placeholder="Hazme una pregunta" />
     <button onclick="preguntar()">Enviar</button>
+
+    <hr>
+
+    <h3>Registrar Academia</h3>
+    <input id="nombreAcademia" placeholder="Nombre Academia">
+    <input id="emailAcademia" placeholder="Email Academia">
+    <input id="passAcademia" placeholder="Contraseña">
+    <button onclick="registrarAcademia()">Registrar Academia</button>
+
+    <h3>Login Academia</h3>
+    <input id="emailLogin" placeholder="Email">
+    <input id="passLogin" placeholder="Contraseña">
+    <button onclick="loginAcademia()">Login</button>
 
     <script>
         function preguntar() {
@@ -48,8 +59,36 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    let chat = document.getElementById('chat');
-                    chat.innerHTML += "<b>Tú:</b> " + pregunta + "<br><b>Opobot:</b> " + data.respuesta + "<br><br>";
+                    document.getElementById('chat').innerHTML += "<b>Tú:</b> " + pregunta + "<br><b>Opobot:</b> " + data.respuesta + "<br><br>";
                 });
         }
+
+        function registrarAcademia() {
+            let nombre = document.getElementById('nombreAcademia').value;
+            let email = document.getElementById('emailAcademia').value;
+            let contraseña = document.getElementById('contraseñaAcademia').value;
+
+            fetch('/registrar_academia', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre: nombre, email: email, contraseña: contraseña })
+            })
+                .then(response => response.json())
+                .then(data => alert(data.mensaje));
+        }
+
+        function loginAcademia() {
+            let email = document.getElementById('emailLogin').value;
+            let contraseña = document.getElementById('passLogin').value;
+
+            fetch('/login_academia', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, contraseña: contraseña })
+            }).then(response => response.json()).then(data => alert(data.mensaje));
+        }
     </script>
+
+    <!-- Campos extra que faltaban (completa esto) -->
+    <input type="email" id="emailAcademia" placeholder="Email Academia">
+    <input type="password" id="contraseñaAcademia" placeholder="Contraseña Academia">
