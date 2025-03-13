@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
-import os
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -11,9 +10,6 @@ api_key = os.getenv("SAMBANOVA_API_KEY")
 client = OpenAI(base_url="https://api.sambanova.ai/v1/", api_key=api_key)
 
 app = FastAPI()
-
-# Importante para servir HTML
-from fastapi.responses import FileResponse
 
 @app.get("/")
 def index():
@@ -28,3 +24,8 @@ async def pregunta(datos: dict):
     )
     respuesta = completion.choices[0].message.content
     return {"respuesta": respuesta}
+
+# IMPORTANTE: Añade estas líneas para Railway
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
