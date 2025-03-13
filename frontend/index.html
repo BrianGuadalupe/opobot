@@ -366,22 +366,37 @@
         let isAuthenticated = false;
         let currentUser = null;
 
+        // Función para verificar el estado de autenticación al cargar la página
+        function checkAuthStatus() {
+            const token = localStorage.getItem('userToken');
+            const userData = localStorage.getItem('userData');
+
+            if (token && userData) {
+                isAuthenticated = true;
+                currentUser = JSON.parse(userData);
+                updateUIForAuth();
+            }
+        }
+
         function updateUIForAuth() {
             const authContainer = document.querySelector('.auth-container');
             const userInfo = document.querySelector('.user-info');
             const userName = document.getElementById('userName');
+            const preguntaInput = document.getElementById('pregunta');
 
             if (isAuthenticated && currentUser) {
                 authContainer.classList.remove('visible');
                 authContainer.classList.add('hidden');
                 userInfo.classList.add('active');
                 userName.textContent = currentUser.nombre;
-                document.getElementById('pregunta').placeholder = "Hazme una pregunta sobre las oposiciones...";
+                preguntaInput.placeholder = "Hazme una pregunta sobre las oposiciones...";
+                preguntaInput.disabled = false;
             } else {
                 authContainer.classList.remove('hidden');
                 authContainer.classList.add('visible');
                 userInfo.classList.remove('active');
-                document.getElementById('pregunta').placeholder = "Inicia sesión para poder hacer preguntas...";
+                preguntaInput.placeholder = "Inicia sesión para poder hacer preguntas...";
+                preguntaInput.disabled = true;
             }
         }
 
@@ -413,15 +428,15 @@
         }
 
         function preguntar() {
-            if (!isAuthenticated) {
-                addMessage('Por favor, inicia sesión para poder usar el chat. Si no tienes una cuenta, regístrate primero.');
-                return;
-            }
-
             const preguntaInput = document.getElementById('pregunta');
             const pregunta = preguntaInput.value.trim();
 
             if (!pregunta) return;
+
+            if (!isAuthenticated || !currentUser) {
+                addMessage('Por favor, inicia sesión para poder usar el chat. Si no tienes una cuenta, regístrate primero.');
+                return;
+            }
 
             addMessage(pregunta, true);
             preguntaInput.value = '';
@@ -510,6 +525,10 @@
                             email: emailInput,
                             token: data.token
                         };
+                        // Guardar datos de sesión en localStorage
+                        localStorage.setItem('userToken', data.token);
+                        localStorage.setItem('userData', JSON.stringify(currentUser));
+
                         document.getElementById('emailLogin').value = '';
                         document.getElementById('passLogin').value = '';
                         addMessage('¡Has iniciado sesión correctamente! Ahora puedes hacer preguntas sobre las oposiciones.');
@@ -526,6 +545,9 @@
         function cerrarSesion() {
             isAuthenticated = false;
             currentUser = null;
+            // Limpiar datos de sesión del localStorage
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('userData');
             updateUIForAuth();
             addMessage('Has cerrado sesión. Por favor, inicia sesión para continuar usando el chat.');
         }
@@ -537,10 +559,10 @@
             }
         });
 
-        // Mensaje de bienvenida inicial
+        // Mensaje de bienvenida inicial y verificación de autenticación
         window.addEventListener('load', function () {
+            checkAuthStatus();
             addMessage('¡Hola! Soy Opobot, tu asistente especializado en oposiciones. Por favor, inicia sesión para poder ayudarte.');
-            updateUIForAuth();
         });
     </script>
 </body>
