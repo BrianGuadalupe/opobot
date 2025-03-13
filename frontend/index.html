@@ -372,9 +372,18 @@
             const userData = localStorage.getItem('userData');
 
             if (token && userData) {
-                isAuthenticated = true;
-                currentUser = JSON.parse(userData);
-                updateUIForAuth();
+                try {
+                    const user = JSON.parse(userData);
+                    if (user && user.token === token) {
+                        isAuthenticated = true;
+                        currentUser = user;
+                        updateUIForAuth();
+                    } else {
+                        cerrarSesion();
+                    }
+                } catch (e) {
+                    cerrarSesion();
+                }
             }
         }
 
@@ -428,15 +437,15 @@
         }
 
         function preguntar() {
-            const preguntaInput = document.getElementById('pregunta');
-            const pregunta = preguntaInput.value.trim();
-
-            if (!pregunta) return;
-
             if (!isAuthenticated || !currentUser) {
                 addMessage('Por favor, inicia sesión para poder usar el chat. Si no tienes una cuenta, regístrate primero.');
                 return;
             }
+
+            const preguntaInput = document.getElementById('pregunta');
+            const pregunta = preguntaInput.value.trim();
+
+            if (!pregunta) return;
 
             addMessage(pregunta, true);
             preguntaInput.value = '';
@@ -452,7 +461,10 @@
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error de autenticación');
+                        if (response.status === 401) {
+                            throw new Error('Error de autenticación');
+                        }
+                        throw new Error('Error en la petición');
                     }
                     return response.json();
                 })
@@ -518,14 +530,13 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.mensaje.includes('exitoso')) {
+                    if (data.mensaje.includes('correcto')) {
                         isAuthenticated = true;
                         currentUser = {
                             nombre: data.nombre,
                             email: emailInput,
                             token: data.token
                         };
-                        // Guardar datos de sesión en localStorage
                         localStorage.setItem('userToken', data.token);
                         localStorage.setItem('userData', JSON.stringify(currentUser));
 
