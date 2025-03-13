@@ -4,482 +4,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opobot - Asistente IA para Oposiciones</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Opobot - Asistente Inteligente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         :root {
             --primary-color: #2563eb;
             --secondary-color: #1e40af;
             --background-color: #f8fafc;
-            --text-color: #1e293b;
-            --border-color: #e2e8f0;
-            --success-color: #22c55e;
-            --error-color: #ef4444;
-            --accent-color: #f59e0b;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --chat-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.5;
+            color: var(--text-primary);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .navbar {
+            background-color: var(--chat-bg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
+        .navbar-brand {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .header h1 i {
-            color: var(--accent-color);
-        }
-
-        .header p {
-            color: #64748b;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
+            font-weight: 600;
         }
 
         .chat-container {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .chat-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chat-header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .chat-header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-info {
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-            color: white;
-        }
-
-        .user-info.active {
-            display: flex;
-        }
-
-        .logout-btn {
-            background-color: transparent;
-            border: 1px solid white;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .logout-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        #chat {
+            background-color: var(--chat-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             height: 500px;
-            padding: 1.5rem;
             overflow-y: auto;
-            background-color: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .message {
-            margin-bottom: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
             max-width: 80%;
-            animation: fadeIn 0.3s ease-in-out;
-            position: relative;
         }
 
-        .user-message {
-            background-color: var(--primary-color);
-            color: white;
+        .message.user {
             margin-left: auto;
-        }
-
-        .bot-message {
-            background-color: #f1f5f9;
-            color: var(--text-color);
-        }
-
-        .message-time {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 0.25rem;
-            text-align: right;
-        }
-
-        .input-container {
-            display: flex;
-            gap: 0.5rem;
-            padding: 1rem;
-            background-color: white;
-            border-top: 1px solid var(--border-color);
-        }
-
-        input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        button {
-            padding: 0.75rem 1.5rem;
             background-color: var(--primary-color);
             color: white;
+            border-radius: 12px 12px 0 12px;
+        }
+
+        .message.bot {
+            margin-right: auto;
+            background-color: #f1f5f9;
+            color: var(--text-primary);
+            border-radius: 12px 12px 12px 0;
+        }
+
+        .message-content {
+            padding: 0.75rem 1rem;
+        }
+
+        .input-group {
+            background-color: var(--chat-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 0.5rem;
+        }
+
+        .form-control {
             border: none;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 0.75rem;
         }
 
-        button:hover {
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
             background-color: var(--secondary-color);
-            transform: translateY(-1px);
-        }
-
-        button:active {
-            transform: translateY(0);
         }
 
         .auth-container {
-            display: none;
+            background-color: var(--chat-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            max-width: 400px;
+            margin: 2rem auto;
         }
 
-        .auth-container.hidden {
-            display: none;
-        }
-
-        .auth-container.visible {
-            display: grid;
-        }
-
-        .auth-section {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .auth-section h3 {
-            margin-bottom: 1rem;
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #64748b;
+        .form-label {
+            color: var(--text-secondary);
             font-weight: 500;
         }
 
-        .form-group input {
-            width: 100%;
+        .form-control {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .loading {
             display: none;
-            position: absolute;
-            bottom: 80px;
-            right: 20px;
-            background-color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 1rem;
         }
 
-        .loading i {
-            color: var(--primary-color);
+        .loading-spinner {
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
             animation: spin 1s linear infinite;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            margin: 0 auto;
         }
 
         @keyframes spin {
-            from {
+            0% {
                 transform: rotate(0deg);
             }
 
-            to {
+            100% {
                 transform: rotate(360deg);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .auth-container {
-                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-robot"></i> Opobot</h1>
-            <p>Tu asistente IA especializado en oposiciones</p>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-robot"></i> Opobot
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="chat-container" id="chat"></div>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="pregunta" placeholder="Escribe tu pregunta aquí...">
+                    <button class="btn btn-primary" onclick="preguntar()">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </div>
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
         </div>
 
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="chat-header-left">
-                    <i class="fas fa-comments"></i>
-                    <span>Chat</span>
-                </div>
-                <div class="user-info">
-                    <i class="fas fa-user"></i>
-                    <span id="userName"></span>
-                    <button class="logout-btn" onclick="cerrarSesion()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Cerrar Sesión
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <div class="auth-container">
+                    <h4 class="mb-4">Registrar Academia</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de la Academia</label>
+                        <input type="text" class="form-control" id="nombreAcademia">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailAcademia">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="passAcademia">
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="registrarAcademia()">
+                        Registrar Academia
                     </button>
                 </div>
             </div>
-            <div id="chat"></div>
-            <div class="loading">
-                <i class="fas fa-spinner"></i> Opobot está pensando...
-            </div>
-            <div class="input-container">
-                <input id="pregunta" placeholder="Hazme una pregunta sobre las oposiciones..." />
-                <button onclick="preguntar()">
-                    <i class="fas fa-paper-plane"></i>
-                    Enviar
-                </button>
-            </div>
-        </div>
-
-        <div class="auth-container visible">
-            <div class="auth-section">
-                <h3><i class="fas fa-user-plus"></i> Registrar Academia</h3>
-                <div class="form-group">
-                    <label for="nombreAcademia">Nombre de la Academia</label>
-                    <input id="nombreAcademia" placeholder="Ingresa el nombre de tu academia">
+            <div class="col-md-6">
+                <div class="auth-container">
+                    <h4 class="mb-4">Iniciar Sesión</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailLogin">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="passLogin">
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="loginAcademia()">
+                        Iniciar Sesión
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="emailAcademia">Correo Electrónico</label>
-                    <input id="emailAcademia" type="email" placeholder="ejemplo@academia.com">
-                </div>
-                <div class="form-group">
-                    <label for="passAcademia">Contraseña</label>
-                    <input id="passAcademia" type="password" placeholder="••••••••">
-                </div>
-                <button onclick="registrarAcademia()">
-                    <i class="fas fa-user-plus"></i>
-                    Registrar Academia
-                </button>
-            </div>
-
-            <div class="auth-section">
-                <h3><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</h3>
-                <div class="form-group">
-                    <label for="emailLogin">Correo Electrónico</label>
-                    <input id="emailLogin" type="email" placeholder="ejemplo@academia.com">
-                </div>
-                <div class="form-group">
-                    <label for="passLogin">Contraseña</label>
-                    <input id="passLogin" type="password" placeholder="••••••••">
-                </div>
-                <button onclick="loginAcademia()">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Iniciar Sesión
-                </button>
             </div>
         </div>
     </div>
 
     <script>
-        let isAuthenticated = false;
-        let currentUser = null;
-
-        // Función para verificar el estado de autenticación al cargar la página
-        function checkAuthStatus() {
-            const token = localStorage.getItem('userToken');
-            const userData = localStorage.getItem('userData');
-
-            if (token && userData) {
-                try {
-                    const user = JSON.parse(userData);
-                    if (user && user.token === token) {
-                        isAuthenticated = true;
-                        currentUser = user;
-                        updateUIForAuth();
-                    } else {
-                        cerrarSesion();
-                    }
-                } catch (e) {
-                    cerrarSesion();
-                }
-            }
-        }
-
-        function updateUIForAuth() {
-            const authContainer = document.querySelector('.auth-container');
-            const userInfo = document.querySelector('.user-info');
-            const userName = document.getElementById('userName');
-            const preguntaInput = document.getElementById('pregunta');
-
-            if (isAuthenticated && currentUser) {
-                authContainer.classList.remove('visible');
-                authContainer.classList.add('hidden');
-                userInfo.classList.add('active');
-                userName.textContent = currentUser.nombre;
-                preguntaInput.placeholder = "Hazme una pregunta sobre las oposiciones...";
-                preguntaInput.disabled = false;
-            } else {
-                authContainer.classList.remove('hidden');
-                authContainer.classList.add('visible');
-                userInfo.classList.remove('active');
-                preguntaInput.placeholder = "Inicia sesión para poder hacer preguntas...";
-                preguntaInput.disabled = true;
-            }
-        }
-
-        function addMessage(message, isUser = false) {
+        function addMessage(content, isUser) {
             const chat = document.getElementById('chat');
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-
-            const messageContent = document.createElement('div');
-            messageContent.textContent = message;
-            messageDiv.appendChild(messageContent);
-
-            const timeDiv = document.createElement('div');
-            timeDiv.className = 'message-time';
-            const now = new Date();
-            timeDiv.textContent = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            messageDiv.appendChild(timeDiv);
-
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${content}
+                </div>
+            `;
             chat.appendChild(messageDiv);
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function showLoading() {
-            document.querySelector('.loading').style.display = 'block';
-        }
-
-        function hideLoading() {
-            document.querySelector('.loading').style.display = 'none';
-        }
-
         function preguntar() {
-            if (!isAuthenticated || !currentUser) {
-                addMessage('Por favor, inicia sesión para poder usar el chat. Si no tienes una cuenta, regístrate primero.');
-                return;
-            }
-
-            const preguntaInput = document.getElementById('pregunta');
-            const pregunta = preguntaInput.value.trim();
-
+            const pregunta = document.getElementById('pregunta').value.trim();
             if (!pregunta) return;
 
             addMessage(pregunta, true);
-            preguntaInput.value = '';
-            showLoading();
+            document.getElementById('pregunta').value = '';
+            document.getElementById('loading').style.display = 'block';
 
             fetch('/pregunta', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${currentUser.token}`
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pregunta })
             })
-                .then(response => {
-                    if (!response.ok) {
-                        if (response.status === 401) {
-                            throw new Error('Error de autenticación');
-                        }
-                        throw new Error('Error en la petición');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    hideLoading();
-                    addMessage(data.respuesta);
+                    document.getElementById('loading').style.display = 'none';
+                    addMessage(data.respuesta, false);
                 })
                 .catch(error => {
-                    hideLoading();
-                    if (error.message === 'Error de autenticación') {
-                        cerrarSesion();
-                        addMessage('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
-                    } else {
-                        addMessage('Lo siento, ha ocurrido un error. Por favor, intenta de nuevo.');
-                    }
+                    document.getElementById('loading').style.display = 'none';
+                    addMessage('Lo siento, ha ocurrido un error. Por favor, intenta de nuevo.', false);
                 });
         }
 
@@ -500,25 +265,20 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                    alert(data.mensaje);
                     if (data.mensaje.includes('exitoso')) {
                         document.getElementById('nombreAcademia').value = '';
                         document.getElementById('emailAcademia').value = '';
                         document.getElementById('passAcademia').value = '';
-                        loginAcademia(email, contraseña);
-                    } else {
-                        alert(data.mensaje);
                     }
-                })
-                .catch(error => {
-                    alert('Error al registrar la academia. Por favor, intenta de nuevo.');
                 });
         }
 
-        function loginAcademia(email = null, contraseña = null) {
-            const emailInput = email || document.getElementById('emailLogin').value.trim();
-            const contraseñaInput = contraseña || document.getElementById('passLogin').value;
+        function loginAcademia() {
+            const email = document.getElementById('emailLogin').value.trim();
+            const contraseña = document.getElementById('passLogin').value;
 
-            if (!emailInput || !contraseñaInput) {
+            if (!email || !contraseña) {
                 alert('Por favor, completa todos los campos');
                 return;
             }
@@ -526,41 +286,16 @@
             fetch('/login_academia', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailInput, contraseña: contraseñaInput })
+                body: JSON.stringify({ email, contraseña })
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.mensaje.includes('correcto')) {
-                        isAuthenticated = true;
-                        currentUser = {
-                            nombre: data.nombre,
-                            email: emailInput,
-                            token: data.token
-                        };
-                        localStorage.setItem('userToken', data.token);
-                        localStorage.setItem('userData', JSON.stringify(currentUser));
-
+                    alert(data.mensaje);
+                    if (data.mensaje.includes('exitoso')) {
                         document.getElementById('emailLogin').value = '';
                         document.getElementById('passLogin').value = '';
-                        addMessage('¡Has iniciado sesión correctamente! Ahora puedes hacer preguntas sobre las oposiciones.');
-                        updateUIForAuth();
-                    } else {
-                        alert(data.mensaje);
                     }
-                })
-                .catch(error => {
-                    alert('Error al iniciar sesión. Por favor, intenta de nuevo.');
                 });
-        }
-
-        function cerrarSesion() {
-            isAuthenticated = false;
-            currentUser = null;
-            // Limpiar datos de sesión del localStorage
-            localStorage.removeItem('userToken');
-            localStorage.removeItem('userData');
-            updateUIForAuth();
-            addMessage('Has cerrado sesión. Por favor, inicia sesión para continuar usando el chat.');
         }
 
         // Evento para enviar mensaje con Enter
@@ -568,12 +303,6 @@
             if (e.key === 'Enter') {
                 preguntar();
             }
-        });
-
-        // Mensaje de bienvenida inicial y verificación de autenticación
-        window.addEventListener('load', function () {
-            checkAuthStatus();
-            addMessage('¡Hola! Soy Opobot, tu asistente especializado en oposiciones. Por favor, inicia sesión para poder ayudarte.');
         });
     </script>
 </body>
