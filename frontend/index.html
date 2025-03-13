@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Opobot Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9fafb;
+            padding: 2rem;
+        }
+
+        #chat {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            height: 400px;
+            overflow-y: scroll;
+            margin-bottom: 1rem;
+        }
+
+        input {
+            width: 80%;
+            padding: 0.7rem;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Opobot (Chat IA)</h2>
+    <div id="chat"></div>
+    <input id="pregunta" placeholder="Hazme una pregunta" />
+    <button onclick="preguntar()">Enviar</button>
+
+    <script>
+        function preguntar() {
+            let pregunta = document.getElementById('pregunta').value;
+            fetch('/pregunta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pregunta: pregunta })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let chat = document.getElementById('chat');
+                    chat.innerHTML += "<b>Tú:</b> " + pregunta + "<br><b>Opobot:</b> " + data.respuesta + "<br><br>";
+                });
+        }
+    </script>
