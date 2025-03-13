@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Opobot Chat</title>
+    <title>Opobot Chat IA</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,6 +25,8 @@
         button {
             padding: 0.5rem;
             margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
@@ -41,13 +43,14 @@
     <h3>Registrar Academia</h3>
     <input id="nombreAcademia" placeholder="Nombre Academia">
     <input id="emailAcademia" placeholder="Email Academia">
-    <input id="passAcademia" placeholder="Contraseña">
+    <input type="password" id="passAcademia" placeholder="Contraseña">
     <button onclick="registrarAcademia()">Registrar Academia</button>
 
     <h3>Login Academia</h3>
-    <input id="emailLogin" placeholder="Email">
-    <input id="passLogin" placeholder="Contraseña">
+    <input id="emailLogin" placeholder="Email academia">
+    <input type="password" id="passLogin" placeholder="Contraseña">
     <button onclick="loginAcademia()">Login</button>
+
 
     <script>
         function preguntar() {
@@ -55,7 +58,7 @@
             fetch('/pregunta', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pregunta: pregunta })
+                body: JSON.stringify({ pregunta })
             })
                 .then(response => response.json())
                 .then(data => {
@@ -66,14 +69,13 @@
         function registrarAcademia() {
             let nombre = document.getElementById('nombreAcademia').value;
             let email = document.getElementById('emailAcademia').value;
-            let contraseña = document.getElementById('contraseñaAcademia').value;
+            let contraseña = document.getElementById('passAcademia').value;
 
             fetch('/registrar_academia', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre: nombre, email: email, contraseña: contraseña })
-            })
-                .then(response => response.json())
+                body: JSON.stringify({ nombre, email, contraseña })
+            }).then(response => response.json())
                 .then(data => alert(data.mensaje));
         }
 
@@ -84,11 +86,11 @@
             fetch('/login_academia', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email, contraseña: contraseña })
-            }).then(response => response.json()).then(data => alert(data.mensaje));
+                body: JSON.stringify({ email, contraseña })
+            }).then(response => response.json())
+                .then(data => alert(data.mensaje));
         }
     </script>
+</body>
 
-    <!-- Campos extra que faltaban (completa esto) -->
-    <input type="email" id="emailAcademia" placeholder="Email Academia">
-    <input type="password" id="contraseñaAcademia" placeholder="Contraseña Academia">
+</html>
